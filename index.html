@@ -100,38 +100,6 @@
             line-height: 1.4;
         }
         
-        .features {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 15px;
-            margin-bottom: 30px;
-            animation: fadeIn 2.5s ease-out;
-        }
-        
-        .feature {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            padding: 12px;
-            border-radius: 12px;
-            width: 110px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-            transition: transform 0.3s ease;
-        }
-        
-        .feature:hover {
-            transform: translateY(-5px);
-        }
-        
-        .feature-icon {
-            font-size: 1.7rem;
-            margin-bottom: 8px;
-        }
-        
-        .feature div {
-            font-size: 0.9rem;
-        }
-        
         .btn {
             position: relative;
             display: inline-block;
@@ -181,6 +149,87 @@
             transform: translateX(100%) rotate(45deg);
         }
         
+        /* Модальное окно */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.5);
+            animation: scaleIn 0.3s ease;
+            color: #333;
+        }
+        
+        .modal-title {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: #4285F4;
+            font-weight: 600;
+        }
+        
+        .phone-number {
+            font-size: 1.8rem;
+            margin-bottom: 25px;
+            color: #333;
+            font-weight: 700;
+            direction: ltr;
+        }
+        
+        .call-btn {
+            display: inline-block;
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            color: white;
+            background: linear-gradient(45deg, #34A853, #0F9D58);
+            background-size: 200% 200%;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            overflow: hidden;
+            transition: all 0.4s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            animation: gradientShift 3s infinite alternate;
+            text-decoration: none;
+        }
+        
+        .call-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            animation: gradientShift 1s infinite alternate;
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 1.5rem;
+            color: #888;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+        
+        .close-modal:hover {
+            color: #333;
+        }
+        
         @keyframes gradientShift {
             0% {
                 background-position: 0% 50%;
@@ -205,11 +254,20 @@
         @keyframes fadeIn {
             from {
                 opacity: 0;
-                transform: translateY(20px);
             }
             to {
                 opacity: 1;
-                transform: translateY(0);
+            }
+        }
+        
+        @keyframes scaleIn {
+            from {
+                transform: scale(0.9);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
             }
         }
         
@@ -272,15 +330,6 @@
                 font-size: 1.5rem;
             }
             
-            .feature {
-                width: 150px;
-                padding: 15px;
-            }
-            
-            .feature-icon {
-                font-size: 2rem;
-            }
-            
             .btn {
                 padding: 18px 40px;
                 font-size: 1.2rem;
@@ -302,37 +351,41 @@
             <h1>Підписка на Google Pro AI</h1>
             <p>Розкрийте потенціал штучного інтелекту для себе! 🚀</p>
             
-            <div class="features">
-                <div class="feature">
-                    <div class="feature-icon">⚡</div>
-                    <div>Швидкість</div>
-                </div>
-                <div class="feature">
-                    <div class="feature-icon">🔒</div>
-                    <div>Безпека</div>
-                </div>
-                <div class="feature">
-                    <div class="feature-icon">🌐</div>
-                    <div>Доступ</div>
-                </div>
-            </div>
-            
-            <button class="btn">ЗАКАЗАТИ</button>
+            <button class="btn" id="orderBtn">ЗАКАЗАТИ</button>
+        </div>
+    </div>
+
+    <!-- Модальное окно -->
+    <div class="modal" id="phoneModal">
+        <div class="modal-content">
+            <span class="close-modal" id="closeModal">&times;</span>
+            <h2 class="modal-title">Зв'яжіться з нами</h2>
+            <div class="phone-number">+380933827707</div>
+            <a href="tel:+380933827707" class="call-btn">ПОДЗВОНИТИ</a>
         </div>
     </div>
 
     <script>
-        // Добавляем обработчик события для кнопки
-        document.querySelector('.btn').addEventListener('click', function() {
-            alert('Дякуємо за ваше замовлення! Найпотужніший штучний інтелект уже на шляху до вас!');
-            this.textContent = 'ОБРОБКА...';
-            this.style.opacity = '0.8';
-            
-            // Восстанавливаем кнопку через некоторое время
-            setTimeout(() => {
-                this.textContent = 'ЗАКАЗАТИ';
-                this.style.opacity = '1';
-            }, 1500);
+        // Получаем элементы
+        const orderBtn = document.getElementById('orderBtn');
+        const phoneModal = document.getElementById('phoneModal');
+        const closeModal = document.getElementById('closeModal');
+        
+        // Открываем модальное окно при нажатии на кнопку "ЗАКАЗАТИ"
+        orderBtn.addEventListener('click', function() {
+            phoneModal.style.display = 'flex';
+        });
+        
+        // Закрываем модальное окно при нажатии на крестик
+        closeModal.addEventListener('click', function() {
+            phoneModal.style.display = 'none';
+        });
+        
+        // Закрываем модальное окно при клике вне его области
+        window.addEventListener('click', function(event) {
+            if (event.target === phoneModal) {
+                phoneModal.style.display = 'none';
+            }
         });
     </script>
 </body>
